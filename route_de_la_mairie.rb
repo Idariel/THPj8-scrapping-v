@@ -12,9 +12,11 @@ def mairies_du_95
       town_hash[:town_name] = name.text
     end
 
-    ville = town_hash[:town_name].downcase
-    townhall_url = "http://annuaire-des-mairies.com/95/"+ville+".html"
-    #bad URI : dans les noms de ville avec espace, les espaces devraient devenir des tirets
+    # ville = town_hash[:town_name].gsub " ", "-" #remplace les espaces par des tirets (pour l'url)
+    # puts ville
+    # villed = ville.downcase #mise en minuscule
+    # puts villed
+    townhall_url = "http://annuaire-des-mairies.com/95/"+ville+".html" #bad URI
     page = Nokogiri::HTML(open(townhall_url))
 
     mail = page.css('td font')
