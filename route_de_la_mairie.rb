@@ -4,24 +4,36 @@ require 'open-uri'
 
 def mairies_du_95
 
-  def get_town_name
+  def get_the_email_of_a_townhal_from_its_webpage
     townhalls = Nokogiri::HTML(open("http://annuaire-des-mairies.com/val-d-oise.html"))
     names = townhalls.css('.lientxt')
+    town_hash = { } #, :email=> email.text, :url=> url
     names.each do |name|
-      town_hash = { } #, :email=> email.text, :url=> url
       town_hash[:town_name] = name.text
     end
-  end
 
-  def get_the_email_of_a_townhal_from_its_webpage
-    vaureal = "http://annuaire-des-mairies.com/95/vaureal.html"
-    page = Nokogiri::HTML(open(vaureal))
+    ville = town_hash[:town_name].downcase
+    townhall_url = "http://annuaire-des-mairies.com/95/"+ville+".html"
+    #bad URI : dans les noms de ville avec espace, les espaces devraient devenir des tirets
+    page = Nokogiri::HTML(open(townhall_url))
 
     mail = page.css('td font')
     mail.each do |email|
       if email.text.include?('@')
         puts email.text
       end
+
+    # # Exemple avec Vaureal
+    # townhall_url = "http://annuaire-des-mairies.com/95/vaureal.html"
+    # #bad URI : dans les noms de ville avec espace, les espaces devraient devenir des tirets
+    # page = Nokogiri::HTML(open(townhall_url))
+    #
+    # mail = page.css('td font')
+    # mail.each do |email|
+    #   if email.text.include?('@')
+    #     puts email.text
+    #   end
+
     end
   end
 
@@ -39,8 +51,7 @@ def mairies_du_95
   end
 
   # get_all_the_urls_of_val_doise_townhalls()
-  # get_the_email_of_a_townhal_from_its_webpage()
-  get_town_name()
-
+  get_the_email_of_a_townhal_from_its_webpage()
 end
+
 mairies_du_95()
